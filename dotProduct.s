@@ -22,24 +22,25 @@
 */
 
 // preserve_caller_vectors(): Push first 64-bits of registers on stack (sp)
+
 .macro save_registers
-    stp x28, x27, [sp, -0x60]!
-    stp x26, x25, [sp, 0x10]
-    stp x24, x23, [sp, 0x20]
-    stp x22, x21, [sp, 0x30]
-    stp x20, x19, [sp, 0x40]
-    stp x29, x30, [sp, 0x50]
-    add x29, sp, 0x50
+stp x20, x19, [sp, #-0x60]!              // store at sp - 0x60, sp modified, sp = sp - 0x60
+stp x22, x21, [sp, 0x10]
+stp x24, x23, [sp, 0x20]
+stp x26, x25, [sp, 0x30]
+stp x28, x27, [sp, 0x40]
+stp x30, x29, [sp, 0x50]
 .endm
-// restore_caller_vectors(): Restore first 64-bits from registers from stack (sp)
+// restore required registers
 .macro restore_registers
-    ldp x29, x30, [sp, 0x50]
-    ldp x20, x19, [sp, 0x40]
-    ldp x22, x21, [sp, 0x30]
-    ldp x24, x23, [sp, 0x20]
-    ldp x26, x25, [sp, 0x10]
-    ldp x28, x27, [sp], 0x60
+ldp x30, x29, [sp, 0x50]
+ldp x28, x27, [sp, 0x40]
+ldp x26, x25, [sp, 0x30]
+ldp x24, x23, [sp, 0x20]
+ldp x22, x21, [sp, 0x10]
+ldp x20, x19, [sp], #0x60                // load from sp, sp modified, sp = sp + 0x60
 .endm
+
 
 .macro partialProducts
         ldp x4, x5, [x2, #0]                        // b[0]
